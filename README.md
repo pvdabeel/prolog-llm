@@ -83,7 +83,7 @@ Then load the library inside SWI-Prolog:
 ### Quick one-shot call
 
 ```prolog
-?- chatgpt:chatgpt("Explain the difference between SLD and SLG resolution.", Reply).
+?- chatgpt("Explain the difference between SLD and SLG resolution.", Reply).
 ```
 
 `Reply` is unified with the full response string. The same answer is
@@ -92,13 +92,13 @@ streamed to `current_output` while the call is in flight.
 ### Discard the response
 
 ```prolog
-?- claude:claude("Tell me a joke about Prolog.").
+?- claude("Tell me a joke about Prolog.").
 ```
 
 ### Interactive prompt (opens `$EDITOR`)
 
 ```prolog
-?- gemini:gemini.
+?- gemini.
 ```
 
 Quit your editor (`:wq` in vim) to send the buffer to the model.
@@ -109,8 +109,8 @@ Each service maintains its own `history/1` in its own module, so calls
 do not bleed between services:
 
 ```prolog
-?- grok:grok("Draft a one-paragraph summary of monotonic reasoning.", Draft),
-   claude:claude(Draft, Critique),
+?- grok("Draft a one-paragraph summary of monotonic reasoning.", Draft),
+   claude(Draft, Critique),
    format("~nClaude says: ~w~n", [Critique]).
 ```
 

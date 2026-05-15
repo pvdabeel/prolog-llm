@@ -54,6 +54,31 @@ LLM service specific code can be found in the files inside the 'Llm' subdirector
 
 :- quasi_quotation_syntax(json).
 
+%! llm:check_api_key(+Service, +Key) is semidet.
+%
+% Succeeds iff Key is a non-empty atom or string suitable for use as an
+% API key. On failure, prints a friendly diagnostic instructing the user
+% how to configure the key (so callers do not end up firing an HTTP
+% request with an empty `Authorization` / `x-api-key` header and getting
+% back a cryptic 401 Unauthorized).
+
+llm:check_api_key(_Service, Key) :-
+  nonvar(Key),
+  ( atom(Key)   -> Key \== ''
+  ; string(Key) -> Key \== ""
+  ; false
+  ),
+  !.
+
+llm:check_api_key(Service, _Key) :-
+  message:color(red),
+  format(user_error,
+    '~N[~w] No API key configured. Set config:llm_api_key(~w, \'<your key>\') in your config file.~n',
+    [Service, Service]),
+  message:color(normal),
+  fail.
+
+
 %! llm:stream(+Endpoint,+APIkey,+Model,+Message,-Response)
 %
 % Stream a message to an OpenAI-compatible LLM service.

@@ -25,6 +25,7 @@ available before you call any of `chatgpt/1`, `claude/1`, `gemini/1`,
 Predicates declared here:
   - config:llm_api_key(?Service, ?Key)        - bearer token per service
   - config:llm_endpoint(?Service, ?URL)       - chat-completions URL
+  - config:llm_local(?Service)                - service runs locally (no key)
   - config:llm_model(?Service, ?ModelName)    - model name per service
   - config:llm_max_tokens(?N)                 - hard upper bound on tokens
   - config:llm_temperature(?T)                - sampling temperature 0.0-1.0
@@ -82,6 +83,19 @@ config:llm_endpoint(chatgpt, 'https://api.openai.com/v1/chat/completions').
 config:llm_endpoint(claude,  'https://api.anthropic.com/v1/messages').
 config:llm_endpoint(gemini,  'https://generativelanguage.googleapis.com/v1beta/chat/completions').
 config:llm_endpoint(ollama,  'http://localhost:11434/v1/chat/completions').
+
+
+% -----------------------------------------------------------------------------
+%  Local services
+% -----------------------------------------------------------------------------
+
+%! config:llm_local(?Service)
+%
+% Declares which services run locally and therefore need no API key. The chat
+% driver (llm:check_api_key/2) skips the key requirement for these services, so
+% there is no need to configure a placeholder key for them above.
+
+config:llm_local(ollama).
 
 
 % -----------------------------------------------------------------------------

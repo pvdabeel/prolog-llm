@@ -300,14 +300,13 @@ llm:execute_llm_code(Src) :-
 
 %! llm:llm_service(?Service) is nondet.
 %
-% Fact table of the supported chat backends. Service is the atom naming both
-% the module and its `Service/2` entry point (e.g. grok:grok/2).
+% Multifile registry of the supported chat backends. Each service module
+% (chatgpt.pl, claude.pl, gemini.pl, grok.pl, ollama.pl) registers itself by
+% asserting a clause `llm:llm_service(Service)`, where Service is the atom
+% naming both the module and its `Service/2` entry point (e.g. grok:grok/2).
+% Adding a new backend therefore requires no edit to this file.
 
-llm:llm_service(grok).
-llm:llm_service(gemini).
-llm:llm_service(claude).
-llm:llm_service(chatgpt).
-llm:llm_service(ollama).
+:- multifile llm:llm_service/1.
 
 
 %! llm:chat(+Service, :StreamGoal, +Input, -ResponseContent) is det.

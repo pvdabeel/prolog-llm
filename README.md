@@ -38,6 +38,8 @@ the shared `llm:stream/5` predicate.
   your `$EDITOR` to compose multi-line prompts
 - LLM-to-LLM message passing via `<call:gemini>...</call:gemini>` etc.
 - Sandboxed execution of `<call:swi_prolog>...</call:swi_prolog>` blocks
+- Batched embedding generation against Ollama-style endpoints
+  (`llm:embed/4`, one HTTP round-trip for a whole list of texts)
 - Single point of configuration through the `config:` namespace
 
 ## Layout
@@ -128,6 +130,23 @@ answers and `prolog-llm` will replay the result back to the model:
 
 The replay loop runs until no more tags are emitted, so a model can
 chain several tool calls before producing its final answer.
+
+### Embeddings
+
+`llm:embed/4` posts a whole list of texts to an Ollama-style embedding
+endpoint in a single HTTP round-trip and returns one vector per input,
+in order. Always batch your inputs instead of looping one request per
+text — for large corpora this is an order of magnitude faster:
+
+```prolog
+?- llm:embed('http://localhost:11434/api/embed', 'nomic-embed-text',
+             ["a web browser", "kernel sources"], [E1, E2]),
+   length(E1, Dim).
+Dim = 768.
+```
+
+The legacy `/api/embeddings` single-input response format
+(`{"embedding": [...]}`) is also understood.
 
 ## Configuration reference
 
